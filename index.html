@@ -1001,7 +1001,7 @@ const tracks = [
   { title:'Fsociety.',      cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/fsociety.mp3', ext:null },
   { title:'Bring me to Life', cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/aaa.mp3', ext:null },
   { title:'Thé à la Menthe', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://precious-empanada-61eb9c.netlify.app/la_caution.mp3', ext:null },
-  { title:'Bound 2', cover:'https://i.scdn.co/image/ab67616d0000b2731dacfbc31cc873d132958af9', audio:'https://precious-empanada-61eb9c.netlify.app/bound2.mp3', ext:null },
+  { title:'Bound 2', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://precious-empanada-61eb9c.netlify.app/bound2.mp3', ext:null },
 ];
 
 function loadTrack(idx, play=false) {
@@ -1010,7 +1010,11 @@ function loadTrack(idx, play=false) {
 
   audio.pause(); // IMPORTANT: stop current safely
 
-  document.getElementById('mp-cover-img').src = t.cover;
+  const cover = document.getElementById('mp-cover-img');
+cover.src = t.cover;
+cover.style.transform = (t.title === 'Bound 2')
+  ? 'translateX(-2px)'
+  : 'translateX(0px)';
   document.getElementById('mp-title').textContent = t.title;
 
   audio.src = t.audio;
