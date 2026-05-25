@@ -965,25 +965,33 @@ syncGlobalViews();
 
 // ── MUSIC PLAYER ──
 const tracks = [
-  { title:'Fsociety.',      cover:'https://r2.haunt.gg/covers/1c92b9e9-1b55-4ca2-acde-d378000b249b.png', audio:'https://r2.haunt.gg/audio/462899fb-c173-4a81-8273-b95527eda5eb.mp3', ext:null },
-  { title:'Consider Commenting?', cover:'https://r2.haunt.gg/covers/f0237862-ffb6-4006-a5cb-930f63cbd995.gif', audio:'https://r2.haunt.gg/audio/9b84a965-7011-4e1a-8982-ea91da8f0731.mp3', ext:null },
-  { title:'around the world', cover:'https://r2.haunt.gg/covers/870b9254-cbec-49e2-b7b2-9143187a56a8.gif', audio:'https://r2.haunt.gg/audio/7fa406bf-d8b6-449c-92a7-0805a3667db8.mp3', ext:'https://www.youtube.com/watch?v=LcYeOYRW0II' },
+  { title:'Fsociety.',      cover:'https://r2.haunt.gg/covers/1c92b9e9-1b55-4ca2-acde-d378000b249b.png', audio:'https://precious-empanada-61eb9c.netlify.app/fsociety.mp3', ext:null },
+  { title:'Consider Commenting?', cover:'https://r2.haunt.gg/covers/f0237862-ffb6-4006-a5cb-930f63cbd995.gif', audio:'https://precious-empanada-61eb9c.netlify.app/aaa.mp3', ext:null },
+  { title:'around the world', cover:'https://r2.haunt.gg/covers/870b9254-cbec-49e2-b7b2-9143187a56a8.gif', audio:'https://precious-empanada-61eb9c.netlify.app/lalala.mp3', ext:'https://www.youtube.com/watch?v=LcYeOYRW0II' },
 ];
 
 function loadTrack(idx, play=false) {
   curTrack = idx;
   const t = tracks[idx];
+
+  audio.pause(); // IMPORTANT: stop current safely
+
   document.getElementById('mp-cover-img').src = t.cover;
   document.getElementById('mp-title').textContent = t.title;
+
   audio.src = t.audio;
-  audio.load();
-  document.getElementById('mp-play-icon').className = 'fa-solid fa-play';
-  if (play) audio.play().catch(()=>{});
+
+  if (play) {
+    audio.play().catch(() => {});
+  }
 }
 
+  document.getElementById('mp-play-icon').className = 'fa-solid fa-play';
+
+
 function initAudio() {
-  loadTrack(curTrack);
-  setVolume(0.5); // This will now correctly draw the white bar immediately
+  setVolume(0.5);
+  loadTrack(curTrack, false);
 }
 
 function togglePlay() {
@@ -993,7 +1001,7 @@ function togglePlay() {
 
 function prevTrack() { loadTrack((curTrack-1+tracks.length)%tracks.length, true); }
 function nextTrack(forcePlay = false) {
-  loadTrack((curTrack + 1) % tracks.length, forcePlay || true);
+  loadTrack((curTrack + 1) % tracks.length, forcePlay);
 }
 function openExternal() { const e=tracks[curTrack].ext; if(e) window.open(e,'_blank'); }
 
@@ -1002,11 +1010,17 @@ function fmtTime(s) {
   return m+':'+(sec<10?'0':'')+sec;
 }
 
-audio.addEventListener('timeupdate',()=>{
-  if(!audio.duration) return;
-  const pct=(audio.currentTime/audio.duration)*100;
-  document.getElementById('mp-fill').style.width=pct+'%';
-  document.getElementById('mp-cur').textContent=fmtTime(audio.currentTime);
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+
+  const pct = (audio.currentTime / audio.duration) * 100;
+
+  document.getElementById('mp-fill').style.width = pct + '%';
+
+  const slider = document.querySelector('.mp-bar input');
+  if (slider) slider.value = pct;
+
+  document.getElementById('mp-cur').textContent = fmtTime(audio.currentTime);
 });
 audio.addEventListener('loadedmetadata',()=>{
   document.getElementById('mp-dur').textContent=fmtTime(audio.duration||0);
@@ -1053,12 +1067,14 @@ function setVolume(val) {
 
 function toggleMute() {
   const volSlider = document.getElementById('vol-slider');
+
   if (audio.volume > 0) {
+    lastVolume = audio.volume;
     setVolume(0);
-    if(volSlider) volSlider.value = 0;
+    if (volSlider) volSlider.value = 0;
   } else {
     setVolume(lastVolume);
-    if(volSlider) volSlider.value = lastVolume;
+    if (volSlider) volSlider.value = lastVolume;
   }
 }
 
@@ -1070,23 +1086,23 @@ function startSite() {
   const bgVideo = document.getElementById('bg-video');
 
   enterScreen.classList.add('hidden');
-  
+
   if (bgVideo) {
-    bgVideo.play().catch(e => console.log("Video play blocked:", e));
+    bgVideo.play().catch(() => {});
   }
 
   initAudio();
-  audio.play().catch(e => console.log("Audio play blocked:", e));
-  
-  const playIcon = document.getElementById('mp-play-icon');
-  if(playIcon) playIcon.className = 'fa-solid fa-pause';
+
+  // wait until audio is actually ready
+  audio.oncanplay = () => {
+    audio.play().then(() => {
+      document.getElementById('mp-play-icon').className = 'fa-solid fa-pause';
+    }).catch(() => {});
+  };
+
   setTimeout(typeNext, 400);
 }
 
-function initAudio() {
-  loadTrack(curTrack);
-  setVolume(0.5); 
-}
 
 // This tells the browser: "Find the screen, and when it's clicked, run startSite"
 const screenElement = document.getElementById('enter-screen');
