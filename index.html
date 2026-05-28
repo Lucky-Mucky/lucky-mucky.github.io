@@ -1226,7 +1226,7 @@ async function fetchDiscordStatus() {
 
     // Update Status Icon
     const status = data.discord_status; 
-    statusEl.src = `https://assets.haunt.gg/status/${status}.png`;
+    statusEl.src = `https://assetsluckymucky.netlify.app/${status}.png`;
 
     // Priority Logic
     const gameActivity = data.activities.find(a => a.type === 0);
