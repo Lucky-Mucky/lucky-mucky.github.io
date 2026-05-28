@@ -493,7 +493,7 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
     <!-- Avatar -->
     <div class="avatar-wrap">
       <div class="av-inner">
-        <img id="main-pfp" src="https://r2.haunt.gg/avatar/44fad1af-217a-4b58-a4d8-1ae569de0ac1.png" alt="luckymucky's avatar">
+        <img id="main-pfp" src="https://assetsluckymucky.netlify.app/pfp.png" alt="luckymucky's avatar">
       </div>
       <img class="av-deco" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png" alt="Avatar Decoration">
     </div>
@@ -513,11 +513,11 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
     <div class="icons-row">
       <a href="https://haunt.gg/luckymucky" target="_blank" rel="noopener" aria-label="Wings 1"
          class="icon-btn" style="filter:drop-shadow(rgb(251,253,254) 0px 0px 0.25px) drop-shadow(rgb(251,253,254) 0px 0px 1.25px)">
-        <img src="https://r2.haunt.gg/icon/148438a6-75d3-4187-b661-235beca382d6.webp" alt="Wings 1">
+        <img src="https://assetsluckymucky.netlify.app/Wings_L.webp" alt="Wings 1">
       </a>
       <a href="https://luckyfi.netlify.app" target="_blank" rel="noopener" aria-label="Luckyfi"
          class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
-        <img src="https://r2.haunt.gg/icon/3a2029c9-8a40-437c-8ae0-bbf89f0bbb53.png" alt="Luckyfi">
+        <img src="https://assetsluckymucky.netlify.app/head.png" alt="Luckyfi">
       </a>
       <a href="https://discord.com/users/1500818934025158706" target="_blank" rel="noopener" aria-label="Discord"
          class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
@@ -537,7 +537,7 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
       </a>
       <a href="https://haunt.gg/luckymucky" target="_blank" rel="noopener" aria-label="Wings 2"
          class="icon-btn" style="filter:drop-shadow(rgb(250,253,253) 0px 0px 0.25px) drop-shadow(rgb(250,253,253) 0px 0px 1.25px)">
-        <img src="https://r2.haunt.gg/icon/23606033-adf5-463f-85c5-155754915e7c.webp" alt="Wings 2">
+        <img src="https://assetsluckymucky.netlify.app/Wings_R.webp" alt="Wings 2">
       </a>
     </div>
 
@@ -739,7 +739,7 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
       <div class="projects-grid">
         <!-- Luckyfi -->
         <div class="reveal-slow project-card" onclick="window.open('https://Luckyfi.netlify.app','_blank')" tabindex="0">
-          <div class="project-bg" style="background-image:url('https://r2.haunt.gg/logo/9d794c6e-cdb2-4cb0-8e37-0d1424720a1d.webp')"></div>
+          <div class="project-bg" style="background-image:url('https://assetsluckymucky.netlify.app/mrwest.webp')"></div>
           <div class="project-gradient"></div>
           <div class="project-tags-row">
             <span class="project-ptag">HTML</span>
@@ -751,18 +751,17 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
           </div>
         </div>
 
-        <!-- LucaProductions -->
-        <div class="reveal-slow project-card" style="transition-delay:.1s" onclick="window.open('https://luca-productions.netlify.app','_blank')" tabindex="0">
-          <div class="project-bg" style="background-image:url('https://r2.haunt.gg/logo/5981ce5a-c48d-4ad6-a27b-a665b266538d.gif')"></div>
+        <!-- Luckyfi -->
+        <div class="reveal-slow project-card" onclick="window.open('https://Luckyfi.netlify.app','_blank')" tabindex="0">
+          <div class="project-bg" style="background-image:url('https://assetsluckymucky.netlify.app/mrwest.webp')"></div>
           <div class="project-gradient"></div>
           <div class="project-tags-row">
-            <span class="project-ptag">CS2</span>
-            <span class="project-ptag">Server</span>
-            <span class="project-ptag">WIP</span>
+            <span class="project-ptag">HTML</span>
+            <span class="project-ptag">Music</span>
           </div>
           <div class="project-bottom">
-            <h3 class="project-title">LucaProductions</h3>
-            <p class="project-desc">My very own cs2 server, Work in progress</p>
+            <h3 class="project-title">Luckyfi</h3>
+            <p class="project-desc">personalized music streaming web app that lets users browse, organize, and play music with a clean and intuitive interface.</p>
           </div>
         </div>
       </div>
@@ -892,7 +891,7 @@ document.querySelectorAll('.reveal,.reveal-slow').forEach(el => observer.observe
 
 // ── GLOBAL VOTE (Firebase Realtime Database) ──
 // Ensure this variable is OUTSIDE the functions so both can see it
-const DB_URL = "https://luckymucky-profile-default-rtdb.europe-west1.firebasedatabase.app/";
+const DB_URL = "https://varrtem-cae6c-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function getGlobalVotes() {
   try {
@@ -998,11 +997,11 @@ syncGlobalViews();
 
 // ── MUSIC PLAYER ──
 const tracks = [
-  { title:'Fsociety.',      cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/fsociety.mp3', ext:null },
-  { title:'Bring me to Life', cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/aaa.mp3', ext:null },
-  { title:'Thé à la Menthe', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://precious-empanada-61eb9c.netlify.app/la_caution.mp3', ext:null },
-  { title:'Bound 2', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://precious-empanada-61eb9c.netlify.app/bound2.mp3', ext:null },
-  { title:'The Lamp is Low', cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/lamp.mp3', ext:null },
+  { title:'Fsociety.',      cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/fsociety.mp3', ext:null },
+  { title:'Bring me to Life', cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/aaa.mp3', ext:null },
+  { title:'Thé à la Menthe', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://assetsluckymucky.netlify.app/la_caution.mp3', ext:null },
+  { title:'Bound 2', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://assetsluckymucky.netlify.app/bound2.mp3', ext:null },
+  { title:'The Lamp is Low', cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/lamp.mp3', ext:null },
 
 ];
 
@@ -1255,7 +1254,7 @@ async function fetchDiscordStatus() {
       if (mainPfp) {
         const avatarHash = data.discord_user.avatar;
         // This builds the official Discord CDN link for your pfp
-        mainPfp.src = `https://r2.haunt.gg/avatar/d57f7c8f-ef2e-4ac0-9221-987e1db98724.png`;
+        mainPfp.src = `https://assetsluckymucky.netlify.app/pfp.png`;
       }
     }
 
