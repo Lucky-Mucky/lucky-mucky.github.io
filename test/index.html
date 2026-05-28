@@ -1,1 +1,1274 @@
-/tuff
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>luckymucky</title>
+<meta name="theme-color" content="#f27db3">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*{cursor:url("https://r2.haunt.gg/cursor/fa448701-11fc-4f68-b3bd-df5c2e47b379.png") 14 14,auto!important}
+a,a *,button,button *,[role="button"],[role="button"] *,.cursor-pointer,.cursor-pointer *{cursor:url("https://r2.haunt.gg/cursor/pointer/de929007-956f-4fe6-a6ea-d86a10642762.png") 14 14,pointer!important}
+
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+body{font-family:'Satoshi',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#030303;color:#fff;min-height:100dvh;overflow-x:hidden;user-select:none}
+
+img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
+
+/* ── ENTER SCREEN ── */
+#enter-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #030303;
+  cursor: pointer; /* Makes the whole screen look clickable */
+  transition: opacity 0.5s ease-out, visibility 0.5s;
+}
+
+#enter-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#enter-btn{
+  background:rgba(0,0,0,0.8);border:2px solid rgba(255,255,255,0.1);
+  border-radius:35px;padding:14px 32px;color:#fff;font-family:inherit;
+  font-size:16px;font-weight:500;letter-spacing:.02em;
+  transition:background .2s,border-color .2s;
+}
+#enter-btn:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2)}
+
+/* ── VIDEO BACKGROUND ── */
+#bg-video{
+  position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+  transform:translateZ(0);will-change:opacity;
+}
+#bg-overlay{
+  position:fixed;inset:0;z-index:1;background:#000001;opacity:.6;
+}
+
+/* ── STARS ── */
+.stars{
+  position:fixed;inset:0;z-index:2;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,.3) .5px,transparent .5px);
+  background-size:200px 200px,130px 130px,80px 80px;
+  background-position:0 0,60px 80px,30px 40px;
+  pointer-events:none;
+}
+
+/* ── SHOOTING STARS ── */
+.shooting-stars{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+@keyframes shoot{
+  0%{transform:translate(0,0);opacity:1}
+  100%{transform:translate(600px,600px);opacity:0}
+}
+.shooting-star{
+  position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;
+  box-shadow:0 0 4px 1px rgba(255,255,255,.6);
+  animation:shoot linear infinite;
+}
+
+/* ── MAIN WRAPPER ── */
+#main{position:relative;z-index:20}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 1 — HERO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#section-hero{
+  min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;position:relative;padding:0 16px;
+}
+
+/* Avatar */
+.avatar-wrap{position:relative;width:128px;height:128px;z-index:10}
+.avatar-wrap .av-inner{width:100%;height:100%;overflow:hidden}
+.avatar-wrap .av-inner img{width:100%;height:100%;object-fit:cover;border-radius:77px;display:block}
+.avatar-wrap .av-deco{
+  position:absolute;top:50%;left:50%;
+  width:100%;height:100%;object-fit:contain;z-index:20;
+  transform:translate(-50%,-50%) scale(1.2);
+  pointer-events:none;
+}
+
+/* Username */
+.uid-tooltip-wrap{position:relative;display:inline-block}
+.uid-tooltip{
+  position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);border-radius:8px;padding:3px 10px;
+  font-size:11px;color:#ddd;white-space:nowrap;margin-bottom:6px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.uid-tooltip-wrap:hover .uid-tooltip{opacity:1}
+
+.username-text{
+  font-size:2.25rem;font-weight:500;color:#fff;
+  text-shadow:0 0 8px rgba(255,255,255,.4),0 0 20px rgba(255,255,255,.2);
+  display:inline-block;
+}
+.cursor-blink{
+  display:inline-block;
+  animation:blink .7s step-end infinite;
+  color:#fff;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Sparkle particles */
+.particles-wrap{position:relative;display:inline-block}
+.particles-bg{
+  position:absolute;inset:0;
+  background:url("https://assets.haunt.gg/sparkles/white.gif") center/cover;
+  opacity:.5;pointer-events:none;z-index:-1;
+}
+
+/* Icons row */
+.icons-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px}
+.icon-btn{
+  width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:none;padding:0;
+  transition:transform .2s,filter .2s;overflow:visible;
+}
+.icon-btn:hover{transform:scale(1.05)}
+.icon-btn img{width:100%;height:100%;object-fit:cover}
+.icon-btn i{font-size:36px;line-height:40px;text-align:center;display:inline-block}
+
+/* Scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:140px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:#ddd;font-size:13px;animation:bounce 2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 2 — ABOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#section-about{
+  min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:60px 16px;
+}
+.about-inner{width:100%;max-width:768px;display:flex;flex-direction:column;gap:12px}
+
+.section-heading{font-size:1.5rem;font-weight:600;color:#fff;text-align:left}
+.section-sub{font-size:.875rem;color:rgba(255,255,255,.9);text-align:left}
+
+/* About Me card */
+.about-card{
+  width:100%;padding:12px 16px;
+  border-radius:20px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  font-size:.875rem;color:#fff;line-height:1.7;
+  white-space:normal;
+}
+.about-card h2{font-size:1.25rem;font-weight:700;margin:4px 0;display:block}
+.about-card a{color:#fff;text-decoration:underline;opacity:.8}
+.about-card a:hover{opacity:1}
+.about-card h1 {
+  margin-bottom: 12px;
+}
+
+.about-card p {
+  margin: 6px 0;
+}
+
+
+.about-card ul {
+  margin: 0 0 12px;
+}
+
+
+/* Presence / Social cards grid */
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.cards-grid{grid-template-columns:1fr}}
+
+.social-card{
+  display:flex;align-items:center;padding:12px;
+  background:rgba(51,51,51,.1);border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;height:88px;position:relative;overflow:hidden;
+  transition:background .2s;
+}
+.social-card:hover{background:rgba(51,51,51,.2)}
+.card-badge{
+  position:absolute;top:0;right:0;display:flex;align-items:center;gap:3px;
+  padding:6px 8px;opacity:.5;font-size:12px;
+}
+.card-badge span{font-size:11px;color:rgba(255,255,255,.7);font-weight:500}
+
+.card-avatar{width:56px;height:56px;flex-shrink:0;position:relative}
+.card-avatar .ca-inner{width:100%;height:100%;overflow:hidden;border-radius:50%}
+.card-avatar .ca-inner.rounded-sq{border-radius:10px}
+.card-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.card-status{position:absolute;bottom:0;right:0;width:16px;height:16px}
+.card-status img{width:100%;height:100%;object-fit:contain}
+
+.card-info{flex:1;min-width:0;margin-left:8px}
+.card-name{font-size:.875rem;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-name-pr{padding-right:76px}
+.card-meta{font-size:.75rem;color:rgba(221,221,221,.75);margin-top:4px}
+.card-row{display:flex;align-items:center;gap:16px;margin-bottom:4px}
+.card-row i{margin-right:4px;color:#ddd}
+
+.card-btn{
+  display:inline-block;margin-top:4px;padding:2px 12px;
+  font-size:.75rem;font-weight:500;border-radius:999px;
+  background:#fff;color:#000;border:1px solid #fff;
+  text-decoration:none;transition:opacity .15s;
+  pointer-events:auto;
+}
+
+.card-btn,
+.card-btn:visited,
+.card-btn:active {
+  color: #0000;
+}
+
+.about-card a.card-btn {
+  color: #000 !important;
+  text-decoration: none;
+  opacity: 1;
+}
+
+
+.card-btn:hover{opacity:.85}
+
+/* Skills */
+.skills-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.skill-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.05);color:#fff;
+  border:1px solid rgba(255,255,255,.1);border-radius:25px;
+  padding:4px 12px;font-size:.875rem;
+  transition:background .15s;
+}
+.skill-tag:hover{background:rgba(255,255,255,.1)}
+.skill-tag i{font-size:1em}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 3 — PROJECTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#section-projects{
+  min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:60px 16px 120px;
+}
+.projects-inner{width:100%;max-width:1024px;display:flex;flex-direction:column;gap:12px}
+
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.projects-grid{grid-template-columns:1fr}}
+
+.project-card{
+  position:relative;height:256px;border-radius:25px;
+  border:1px solid rgba(255,255,255,.1);overflow:hidden;
+  cursor:pointer;
+  transition:transform .2s,border-color .2s;
+}
+.project-card:hover{transform:scale(1.01)}
+
+.project-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  background-color:rgba(10,10,10,.8);border-radius:24px;
+  transition:transform .3s;
+}
+.project-card:hover .project-bg{transform:scale(1.03)}
+
+.project-gradient{
+  position:absolute;inset:0;border-radius:24px;
+  background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.4) 50%,transparent 100%);
+  opacity:.95;
+}
+
+.project-tags-row{
+  position:absolute;top:12px;left:12px;display:flex;flex-wrap:wrap;gap:6px;
+}
+@media(min-width:640px){.project-tags-row{top:16px;left:16px;gap:8px}}
+
+.project-ptag{
+  padding:4px 10px;backdrop-filter:blur(8px);border-radius:15px;
+  font-size:.75rem;font-weight:500;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;
+}
+@media(min-width:640px){.project-ptag{padding:4px 12px;font-size:.875rem}}
+
+.project-bottom{
+  position:absolute;bottom:0;left:0;right:0;padding:16px 16px 12px;
+}
+@media(min-width:640px){.project-bottom{padding:24px 24px 16px}}
+
+.project-title{font-size:1.25rem;font-weight:700;color:#fff;margin-bottom:8px}
+@media(min-width:640px){.project-title{font-size:1.5rem}}
+.project-desc{font-size:.875rem;color:rgba(255,255,255,.9)}
+@media(min-width:640px){.project-desc{font-size:1rem}}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FIXED BOTTOM BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#info-bar{
+  position:fixed;left:0;right:0;bottom:16px;z-index:30;
+  font-size:.875rem;
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  padding:0 24px;gap:4px;
+}
+.bar-left,.bar-right{display:flex;align-items:center;gap:0}
+.bar-item{display:flex;align-items:center;gap:4px;color:#fff;font-size:.875rem;white-space:nowrap}
+.bar-sep{font-weight:700;color:rgba(255,255,255,.14);font-size:16px;margin:0 8px}
+
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center}
+.tip{
+  position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;padding:2px 8px;font-size:11px;white-space:nowrap;
+  margin-bottom:6px;opacity:0;pointer-events:none;transition:opacity .15s;color:#ddd;
+}
+.tooltip-wrap:hover .tip{opacity:1}
+
+.feedback-btns{display:flex;align-items:center;gap:16px;opacity:.9;transition:opacity .1s}
+.feedback-btns:hover{opacity:1}
+.fb-btn{background:none;border:none;padding:0;color:#fff;font-size:1.125rem;transition:transform .15s}
+.fb-btn:hover{transform:scale(1.15)}
+.fb-btn.active-like  i{color:#1db954}
+.fb-btn.active-dislike i{color:#e05c6a}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FIXED TOP-LEFT (Volume)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#vol-btn {
+  position: fixed; top: 16px; left: 16px; z-index: 30;
+  width: 56px; height: 56px;
+  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(1.2px);
+  border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 35px;
+  display: flex; align-items: center; justify-content: center;
+  transition: width 0.3s ease, background 0.2s;
+  overflow: hidden;
+}
+#vol-btn:hover {
+  width: 180px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#vol-slider-wrap {
+  width: 0; opacity: 0;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  display: flex; align-items: center;
+}
+
+/* Shows the slider when the button is hovered */
+#vol-btn:hover #vol-slider-wrap {
+  width: 100px; opacity: 1;
+  padding: 0 12px 0 4px;
+}
+
+#vol-btn.expanded{width:180px}
+#vol-btn.expanded #vol-slider-wrap{width:100px;padding:0 8px 0 4px}
+#vol-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  /* Use a default background so it's visible on first hover */
+  background: rgba(255, 255, 255, 0.1); 
+  cursor: pointer;
+  outline: none;
+}
+
+/* Chrome/Safari Thumb */
+#vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+/* Firefox Thumb */
+#vol-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: none;
+}
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MUSIC PLAYER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#music-player{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  z-index:49;width:min(95%,520px);
+}
+.mp-inner{
+  display:flex;align-items:center;padding:14px;
+  background:rgba(255,255,255,.05);backdrop-filter:blur(1.2px);
+  border:2px solid rgba(255,255,255,.1);border-radius:35px;
+}
+.mp-cover{
+  width:44px;height:44px;border-radius:35px;overflow:hidden;flex-shrink:0;margin-right:14px;
+}
+.mp-cover img{width:44px;height:44px;object-fit:cover}
+
+.mp-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:0}
+.mp-title-row{display:flex;align-items:center;justify-content:space-between}
+.mp-title{
+  font-size:.875rem;font-weight:500;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:200px;flex:1;
+  transition:opacity .15s;
+}
+.mp-title:hover{opacity:.8}
+.mp-ext{font-size:.75rem;margin-left:4px;color:#ddd}
+
+.mp-progress-row{display:flex;align-items:center;gap:8px;width:100%;margin-top:2px}
+.mp-time{font-size:11px;color:rgba(221,221,221,.75);min-width:35px}
+.mp-time.right{text-align:right}
+.mp-bar{
+  position:relative;flex:1;height:4px;border-radius:9999px;
+  background:rgba(255,255,255,.1);cursor:pointer;
+}
+.mp-fill{height:100%;border-radius:9999px;background:rgba(255,255,255,.7);pointer-events:none}
+.mp-bar input[type=range]{
+  position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;height:100%;
+}
+
+.mp-controls{display:flex;align-items:center;gap:4px;margin-left:8px;flex-shrink:0}
+@media(min-width:640px){.mp-controls{gap:8px;margin-left:16px}}
+.mp-btn{
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;color:#fff;font-size:.875rem;
+  border-radius:50%;transition:background .15s;
+}
+.mp-btn:hover{background:rgba(255,255,255,.1)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UNDERLINE FIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.icon-btn { text-decoration: none !important; }
+.icon-btn i { text-decoration: none !important; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SCROLL ANIMATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal-slow{opacity:0;transform:translateY(50px);transition:opacity .7s ease,transform .7s ease}
+.reveal-slow.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- ENTER SCREEN -->
+<div id="enter-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#030303;cursor:pointer;">
+  <div style="text-align:center;pointer-events:none;">
+    <h1 style="color:#fff;font-size:1.5rem;">click me ._.</h1>
+  </div>
+</div>
+
+<!-- VIDEO BACKGROUND -->
+<video id="bg-video" src="https://r2.haunt.gg/background/9fe28792-bbb7-465c-b64f-628ff8255b1e.mp4"
+  autoplay muted loop playsinline preload="metadata" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
+<div id="bg-overlay"></div>
+
+<!-- STARS & SHOOTING STARS -->
+<div class="stars"></div>
+<div class="shooting-stars" id="shooting-stars"></div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+  <!-- ══ HERO ══ -->
+  <section id="section-hero">
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <div class="av-inner">
+        <img id="main-pfp" src="https://r2.haunt.gg/avatar/44fad1af-217a-4b58-a4d8-1ae569de0ac1.png" alt="luckymucky's avatar">
+      </div>
+      <img class="av-deco" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png" alt="Avatar Decoration">
+    </div>
+
+    <!-- Username -->
+    <div class="uid-tooltip-wrap">
+      <div class="uid-tooltip">UID 2.367</div>
+      <div class="particles-wrap">
+        <div class="particles-bg"></div>
+        <h1 class="username-text">
+          <span id="typed-username"></span><span class="cursor-blink" id="type-cursor">‎</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Icons -->
+    <div class="icons-row">
+      <a href="https://haunt.gg/luckymucky" target="_blank" rel="noopener" aria-label="Wings 1"
+         class="icon-btn" style="filter:drop-shadow(rgb(251,253,254) 0px 0px 0.25px) drop-shadow(rgb(251,253,254) 0px 0px 1.25px)">
+        <img src="https://r2.haunt.gg/icon/148438a6-75d3-4187-b661-235beca382d6.webp" alt="Wings 1">
+      </a>
+      <a href="https://luckyfi.netlify.app" target="_blank" rel="noopener" aria-label="Luckyfi"
+         class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
+        <img src="https://r2.haunt.gg/icon/3a2029c9-8a40-437c-8ae0-bbf89f0bbb53.png" alt="Luckyfi">
+      </a>
+      <a href="https://discord.com/users/1500818934025158706" target="_blank" rel="noopener" aria-label="Discord"
+         class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
+        <i class="fa-brands fa-discord fa-fw" style="color:#fff;filter:brightness(1.2)"></i>
+      </a>
+      <a href="https://guns.lol/luckymucky" target="_blank" rel="noopener" aria-label="guns.lol"
+         class="icon-btn" style="filter:drop-shadow(rgb(116,71,127) 0px 0px 0.25px) drop-shadow(rgb(116,71,127) 0px 0px 1.25px)">
+        <img src="https://favicon.vemetric.com/guns.lol" alt="guns.lol">
+      </a>
+      <a href="https://open.spotify.com/user/31tmqvgvtqaemg27zodd23irme4m?si=8fe9ebc944b54071" target="_blank" rel="noopener" aria-label="Spotify"
+         class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
+        <i class="fa-brands fa-spotify fa-fw" style="color:#fff;filter:brightness(1.2)"></i>
+      </a>
+      <a href="https://steamcommunity.com/profiles/76561198780341828/" target="_blank" rel="noopener" aria-label="Steam"
+         class="icon-btn" style="filter:drop-shadow(rgb(255,255,255) 0px 0px 0.25px) drop-shadow(rgb(255,255,255) 0px 0px 1.25px)">
+        <i class="fa-brands fa-steam fa-fw" style="color:#fff;filter:brightness(1.2)"></i>
+      </a>
+      <a href="https://haunt.gg/luckymucky" target="_blank" rel="noopener" aria-label="Wings 2"
+         class="icon-btn" style="filter:drop-shadow(rgb(250,253,253) 0px 0px 0.25px) drop-shadow(rgb(250,253,253) 0px 0px 1.25px)">
+        <img src="https://r2.haunt.gg/icon/23606033-adf5-463f-85c5-155754915e7c.webp" alt="Wings 2">
+      </a>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint">
+      <i class="fa-solid fa-arrow-down" style="color:#ddd"></i>
+      <p style="color:#ddd;font-size:.75rem">Scroll for more</p>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section id="section-about">
+    <div class="about-inner">
+      <div class="reveal">
+        <h2 class="section-heading">About Me</h2>
+      </div>
+
+      <!-- About Me text card -->
+      <!-- About Me text card -->
+<div class="reveal about-card">
+  <div>
+  <h1>Hi, I'm <strong>Luca</strong></h1>
+
+  <p>
+    I'm from the <em>Czech Republic</em>, i like do stuff with AI.
+  </p>
+
+  <p>
+    dont play valo or overwatch go play
+    <strong>
+      <a href="https://www.faceit.com/en/players/ImLuckyMucky" target="_blank" rel="noopener">
+        faceit
+      </a>
+    </strong>
+  </p>
+
+  <p>
+    <strong>
+      <a href="https://luckyfi.netlify.app/" target="_blank" rel="noopener">
+        luckyfi.netlify.app
+      </a>
+    </strong>
+  </p>
+
+  <p>
+    <strong>
+      <a href="https://github.com/lucky-mucky" target="_blank" rel="noopener">
+        My Github
+      </a>
+    </strong>
+  </p>
+
+  <p>VVVVVV</p>
+
+  <p>
+    <strong>
+      <u>
+        <a href="https://steamcommunity.com/id/Lucky_Mucky/" target="_blank" rel="noopener">
+          Send me ur CS2 skins
+        </a>
+      </u>
+    </strong>
+  </p>
+
+  <h2>🔎Where to find me :</h2>
+
+  <p>
+    <strong>
+      <a href="https://discord.com/users/1500818934025158706" target="_blank" rel="noopener">
+        Discord.com
+      </a>
+    </strong>
+  </p>
+</div>
+
+      <!-- Social cards grid -->
+      <div class="reveal cards-grid">
+
+        <!-- Discord presence -->
+<div class="social-card cursor-pointer" onclick="window.open('https://discord.com/users/1500818934025158706','_blank')">
+  <div class="card-avatar">
+    <div class="ca-inner">
+      <img id="discord-avatar" src="https://cdn.discordapp.com/avatars/1500818934025158706/f8f63be6dc8ff6e9af90801bf9175f0f.png" alt="Discord Avatar">
+    </div>
+    <div class="card-status">
+      <img id="discord-status" src="https://assets.haunt.gg/status/offline.png" alt="offline status">
+    </div>
+  </div>
+  <div class="card-info">
+    <div class="card-name">unknownluca_</div>
+    <div id="discord-activity" class="card-meta">loading presence...</div>
+  </div>
+</div>
+
+<a href="https://openweathermap.org/city/3067696" target="_blank" style="text-decoration: none; display: block; color: inherit;">
+  <div class="social-card">
+    <div class="card-badge">
+      <i class="fa-solid fa-cloud" style="color:#60a5fa"></i>
+      <span>Weather</span>
+    </div>
+    <div class="card-avatar">
+      <div class="ca-inner rounded-sq">
+        <img id="w-icon" src="https://cdn-icons-png.flaticon.com/512/3222/3222800.png" alt="Weather Icon">
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-name card-name-pr">Prague, Czech Republic</div>
+      <div style="margin-top:2px">
+        <div class="card-row">
+          <div style="display:flex;align-items:center">
+            <i class="fa-solid fa-thermometer-half" style="color:#ddd;margin-right:6px"></i>
+            <span id="w-temp" style="font-size:.75rem;color:rgba(221,221,221,.75)">Loading...</span>
+          </div>
+          <div style="display:flex;align-items:center">
+            <i class="fa-solid fa-cloud-sun" style="color:#ddd;margin-right:6px"></i>
+            <span id="w-desc" style="font-size:.75rem;color:rgba(221,221,221,.75)">Updating...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+
+        <!-- Spotify -->
+        <div class="social-card">
+          <div class="card-badge">
+            <i class="fa-brands fa-spotify" style="color:#1db954"></i>
+            <span>Spotify</span>
+          </div>
+          <div class="card-avatar">
+            <div class="ca-inner rounded-sq" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05)">
+              <i class="fa-brands fa-spotify" style="color:rgba(255,255,255,.8);font-size:2.25rem"></i>
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-name card-name-pr">Luca</div>
+            <div style="margin-top:2px">
+              <div style="display:flex;align-items:center;margin-bottom:4px">
+                <i class="fa-solid fa-user" style="color:#ddd;margin-right:6px;flex-shrink:0"></i>
+                <span style="font-size:.75rem;color:rgba(221,221,221,.75)">0 followers</span>
+              </div>
+              <a href="https://open.spotify.com/user/31tmqvgvtqaemg27zodd23irme4m" target="_blank" rel="noopener" class="card-btn">Open in Spotify</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- GitHub -->
+        <div class="social-card cursor-pointer" onclick="window.open('https://github.com/lucky-mucky','_blank')">
+          <div class="card-badge">
+            <i class="fa-brands fa-github" style="color:#fff"></i>
+            <span>GitHub</span>
+          </div>
+          <div class="card-avatar">
+            <div class="ca-inner rounded-sq">
+              <img src="https://avatars.githubusercontent.com/u/129414977?v=4" alt="Luca avatar">
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-name card-name-pr">Luca</div>
+            <div style="margin-top:2px">
+              <div class="card-row" style="margin-bottom:4px">
+                <div style="display:flex;align-items:center">
+                  <i class="fa-solid fa-users" style="color:#ddd;margin-right:4px;opacity:.85"></i>
+                  <span style="font-size:.75rem;color:rgba(221,221,221,.75)">0 Followers</span>
+                </div>
+                <div style="display:flex;align-items:center">
+                  <i class="fa-solid fa-book" style="color:#ddd;margin-right:4px;opacity:.85"></i>
+                  <span style="font-size:.75rem;color:rgba(221,221,221,.75)">7 Repos</span>
+                </div>
+              </div>
+              <a href="https://github.com/lucagithubs" target="_blank" rel="noopener" class="card-btn">View Profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="reveal skills-wrap">
+        <span class="skill-tag"><i class="fa-brands fa-html5"></i> HTML 5</span>
+        <span class="skill-tag"><i class="fa-brands fa-js"></i> JavaScript</span>
+        <span class="skill-tag"><i class="fa-brands fa-python"></i> Python</span>
+        <span class="skill-tag"><i class="fa-solid fa-code"></i> C++</span>
+        <span class="skill-tag"><i class="fa-brands fa-docker"></i> Docker Desktop</span>
+        <span class="skill-tag"><i class="fa-solid fa-code"></i> VS Code</span>
+        <span class="skill-tag"><i class="fa-solid fa-laptop-code"></i> Visual Studio</span>
+        <span class="skill-tag"><i class="fa-solid fa-cloud"></i> Netlify</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROJECTS ══ -->
+  <section id="section-projects">
+    <div class="projects-inner">
+      <div class="reveal" style="margin-bottom:4px">
+        <h2 class="section-heading">Featured Projects</h2>
+        <p class="section-sub">Here are some projects I worked at, or on.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Luckyfi -->
+        <div class="reveal-slow project-card" onclick="window.open('https://Luckyfi.netlify.app','_blank')" tabindex="0">
+          <div class="project-bg" style="background-image:url('https://r2.haunt.gg/logo/9d794c6e-cdb2-4cb0-8e37-0d1424720a1d.webp')"></div>
+          <div class="project-gradient"></div>
+          <div class="project-tags-row">
+            <span class="project-ptag">HTML</span>
+            <span class="project-ptag">Music</span>
+          </div>
+          <div class="project-bottom">
+            <h3 class="project-title">Luckyfi</h3>
+            <p class="project-desc">personalized music streaming web app that lets users browse, organize, and play music with a clean and intuitive interface.</p>
+          </div>
+        </div>
+
+        <!-- LucaProductions -->
+        <div class="reveal-slow project-card" style="transition-delay:.1s" onclick="window.open('https://luca-productions.netlify.app','_blank')" tabindex="0">
+          <div class="project-bg" style="background-image:url('https://r2.haunt.gg/logo/5981ce5a-c48d-4ad6-a27b-a665b266538d.gif')"></div>
+          <div class="project-gradient"></div>
+          <div class="project-tags-row">
+            <span class="project-ptag">CS2</span>
+            <span class="project-ptag">Server</span>
+            <span class="project-ptag">WIP</span>
+          </div>
+          <div class="project-bottom">
+            <h3 class="project-title">LucaProductions</h3>
+            <p class="project-desc">My very own cs2 server, Work in progress</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /main -->
+
+<!-- ══ FIXED BOTTOM BAR ══ -->
+<div id="info-bar">
+  <div class="bar-left">
+    <div class="tooltip-wrap bar-item">
+      <div class="tip">Views</div>
+      <i class="fa-solid fa-eye" style="color:#fff;margin-right:4px"></i>
+      <span style="color:#fff" id="view-count">9</span>
+    </div>
+    <span class="bar-sep">|</span>
+    <div class="tooltip-wrap bar-item">
+      <div class="tip">Location</div>
+      <i class="fa-solid fa-location-dot" style="color:#fff;margin-right:4px"></i>
+      <span style="color:#fff">Prague</span>
+    </div>
+    <span class="bar-sep">|</span>
+    <div class="tooltip-wrap bar-item">
+      <div class="tip">Joined</div>
+      <i class="fa-solid fa-calendar" style="color:#fff;margin-right:4px;font-size:.875rem"></i>
+      <span style="color:#fff">10.08.2025</span>
+    </div>
+  </div>
+  <div class="bar-right">
+    <div class="feedback-btns">
+      <div class="tooltip-wrap" id="like-tip"><div class="tip" id="like-tip-txt">Like (0)</div>
+        <button class="fb-btn" id="btn-like" aria-label="Like" onclick="vote('like')">
+          <i class="fa-solid fa-thumbs-up" style="color:#fff;transition:color .2s"></i>
+        </button>
+      </div>
+      <div class="tooltip-wrap" id="dislike-tip"><div class="tip" id="dislike-tip-txt">Dislike (0)</div>
+        <button class="fb-btn" id="btn-dislike" aria-label="Dislike" onclick="vote('dislike')">
+          <i class="fa-solid fa-thumbs-down" style="color:#fff;transition:color .2s"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOLUME BUTTON ══ -->
+<div id="vol-btn">
+  <button onclick="toggleMute()" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:#fff;font-size:26px;flex-shrink:0">
+    <i id="vol-icon" class="fa-solid fa-volume-high"></i>
+  </button>
+  <div id="vol-slider-wrap">
+    <input id="vol-slider" type="range" min="0" max="1" step="0.01" value="0.5" oninput="setVolume(this.value)">
+  </div>
+</div>
+
+<!-- ══ MUSIC PLAYER ══ -->
+<div id="music-player">
+  <div class="mp-inner">
+    <div class="mp-cover">
+      <img id="mp-cover-img" src="https://r2.haunt.gg/covers/870b9254-cbec-49e2-b7b2-9143187a56a8.gif" alt="cover">
+    </div>
+    <div class="mp-info">
+      <div class="mp-title-row">
+        <span class="mp-title" id="mp-title" title="Click to open" onclick="openExternal()">around the world</span>
+        <i class="fa-solid fa-arrow-up-right-from-square mp-ext"></i>
+      </div>
+      <div class="mp-progress-row">
+        <span class="mp-time" id="mp-cur">0:01</span>
+        <div class="mp-bar" id="mp-bar">
+          <div class="mp-fill" id="mp-fill" style="width:0%"></div>
+          <input type="range" min="0" max="100" value="0" step="0.1" oninput="seekTo(this.value)">
+        </div>
+        <span class="mp-time right" id="mp-dur">4:12</span>
+      </div>
+    </div>
+    <div class="mp-controls">
+      <button class="mp-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="mp-btn" id="mp-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="mp-play-icon"></i></button>
+      <button class="mp-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>    </div>
+  </div>
+</div>
+
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+
+let lastVolume = 0.5;
+let curTrack = 2; // Default track
+const audio = document.getElementById('audio');
+
+
+// ── SHOOTING STARS ──
+const starsContainer = document.getElementById('shooting-stars');
+for (let i = 0; i < 30; i++) {
+  const s = document.createElement('div');
+  s.className = 'shooting-star';
+  const topAreas = [-900,-800,-700,-500,-400,-300,-100,-50,0,300,400,700,800];
+  const top = topAreas[Math.floor(Math.random()*topAreas.length)] + (Math.random()*100-50);
+  const left = Math.random() * 3400 - 800;
+  const delay = Math.random() * 13;
+  const dur = 4 + Math.random() * 2;
+  s.style.cssText = `top:${top}px;left:${left}px;animation-delay:${delay}s;animation-duration:${dur}s`;
+  starsContainer.appendChild(s);
+}
+
+// ── TYPEWRITER ──
+const fullName = 'luckymucky';
+let typed = '';
+let typingDone = false;
+const typedEl = document.getElementById('typed-username');
+const cursor = document.getElementById('type-cursor');
+function typeNext() {
+  if (typed.length < fullName.length) {
+    typed += fullName[typed.length];
+    typedEl.textContent = typed;
+    setTimeout(typeNext, 80 + Math.random()*60);
+  } else {
+    typingDone = true;
+    cursor.style.display = 'none';
+  }
+}
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal,.reveal-slow').forEach(el => observer.observe(el));
+
+// ── GLOBAL VOTE (Firebase Realtime Database) ──
+// Ensure this variable is OUTSIDE the functions so both can see it
+const DB_URL = "https://luckymucky-profile-default-rtdb.europe-west1.firebasedatabase.app/";
+
+async function getGlobalVotes() {
+  try {
+    const response = await fetch(`${DB_URL}votes.json`);
+    const data = await response.json() || { likes: 0, dislikes: 0 };
+    
+    const voted = localStorage.getItem('lm3_voted');
+    
+    // Update tooltip labels
+    document.getElementById('like-tip-txt').textContent = `Like (${Math.max(0, data.likes || 0)})`;
+    document.getElementById('dislike-tip-txt').textContent = `Dislike (${Math.max(0, data.dislikes || 0)})`;
+    
+    // Update button colors
+    document.getElementById('btn-like').className = 'fb-btn' + (voted === 'like' ? ' active-like' : '');
+    document.getElementById('btn-dislike').className = 'fb-btn' + (voted === 'dislike' ? ' active-dislike' : '');
+  } catch (e) {
+    console.error("Global votes sync failed:", e);
+  }
+}
+
+async function vote(type) {
+  const voted = localStorage.getItem('lm3_voted');
+  
+  try {
+    const response = await fetch(`${DB_URL}votes.json`);
+    let data = await response.json() || { likes: 0, dislikes: 0 };
+
+    // Clean data to prevent negatives
+    data.likes = Math.max(0, data.likes || 0);
+    data.dislikes = Math.max(0, data.dislikes || 0);
+
+    if (voted === type) {
+      // UNVOTE
+      if (data[type === 'like' ? 'likes' : 'dislikes'] > 0) {
+        data[type === 'like' ? 'likes' : 'dislikes']--;
+      }
+      localStorage.removeItem('lm3_voted');
+    } else {
+      // CHANGE VOTE
+      if (voted === 'like' && data.likes > 0) data.likes--;
+      if (voted === 'dislike' && data.dislikes > 0) data.dislikes--;
+      
+      data[type === 'like' ? 'likes' : 'dislikes']++;
+      localStorage.setItem('lm3_voted', type);
+    }
+
+    // Save back to Firebase
+    await fetch(`${DB_URL}votes.json`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+
+    getGlobalVotes();
+  } catch (e) {
+    console.error("Vote failed:", e);
+  }
+}
+
+// Initial sync
+getGlobalVotes();
+
+// ── GLOBAL VIEWS (Firebase) ──
+async function syncGlobalViews() {
+  try {
+    // 1. Get current global views from the cloud
+    const response = await fetch(`${DB_URL}views.json`);
+    let globalViews = await response.json();
+
+    // 2. Handle empty database or new visits
+    if (globalViews === null) {
+      globalViews = 1; // Start at 1 if no data exists
+      await fetch(`${DB_URL}views.json`, {
+        method: 'PUT',
+        body: JSON.stringify(globalViews)
+      });
+    } else {
+      // 3. Only increase if the user hasn't visited in this session
+      if (!sessionStorage.getItem('lm3_viewed')) {
+        globalViews++;
+        sessionStorage.setItem('lm3_viewed', 'true');
+        
+        // Save the updated count back to Firebase
+        await fetch(`${DB_URL}views.json`, {
+          method: 'PUT',
+          body: JSON.stringify(globalViews)
+        });
+      }
+    }
+
+    // 4. Update the display on the page
+    const viewEl = document.getElementById('view-count');
+    if (viewEl) viewEl.textContent = globalViews;
+    
+  } catch (e) {
+    console.error("View sync failed:", e);
+    // Fallback to local display if the database is unreachable
+    document.getElementById('view-count').textContent = "1";
+  }
+}
+
+// Start the view sync immediately
+syncGlobalViews();
+
+// ── MUSIC PLAYER ──
+const tracks = [
+  { title:'Fsociety.',      cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/fsociety.mp3', ext:null },
+  { title:'Bring me to Life', cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/aaa.mp3', ext:null },
+  { title:'Thé à la Menthe', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://precious-empanada-61eb9c.netlify.app/la_caution.mp3', ext:null },
+  { title:'Bound 2', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://precious-empanada-61eb9c.netlify.app/bound2.mp3', ext:null },
+  { title:'The Lamp is Low', cover:'https://precious-empanada-61eb9c.netlify.app/cross.gif', audio:'https://precious-empanada-61eb9c.netlify.app/lamp.mp3', ext:null },
+
+];
+
+function loadTrack(idx, play=false) {
+  curTrack = idx;
+  const t = tracks[idx];
+
+  audio.pause(); // IMPORTANT: stop current safely
+
+  const cover = document.getElementById('mp-cover-img');
+cover.src = t.cover;
+
+if (t.cover.includes("cross.gif")) {
+  cover.style.transform = "scale(1.5)";
+} else {
+  cover.style.transform = "scale(1)";
+}
+cover.style.transform = (t.title === 'Bound 2')
+  ? 'translateX(-2px)'
+  : 'translateX(0px)';
+  document.getElementById('mp-title').textContent = t.title;
+
+  audio.src = t.audio;
+
+  if (play) {
+    audio.play().catch(() => {});
+  }
+}
+
+  document.getElementById('mp-play-icon').className = 'fa-solid fa-play';
+
+
+function initAudio() {
+  setVolume(0.5);
+  loadTrack(curTrack, false);
+}
+
+function togglePlay() {
+  if (audio.paused) { audio.play().catch(()=>{}); document.getElementById('mp-play-icon').className='fa-solid fa-pause'; }
+  else { audio.pause(); document.getElementById('mp-play-icon').className='fa-solid fa-play'; }
+}
+
+function prevTrack() { loadTrack((curTrack-1+tracks.length)%tracks.length, true); }
+function nextTrack(forcePlay = false) {
+  loadTrack((curTrack + 1) % tracks.length, forcePlay);
+}
+function openExternal() { const e=tracks[curTrack].ext; if(e) window.open(e,'_blank'); }
+
+function fmtTime(s) {
+  const m=Math.floor(s/60); const sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+
+  const pct = (audio.currentTime / audio.duration) * 100;
+
+  document.getElementById('mp-fill').style.width = pct + '%';
+
+  const slider = document.querySelector('.mp-bar input');
+  if (slider) slider.value = pct;
+
+  document.getElementById('mp-cur').textContent = fmtTime(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata',()=>{
+  document.getElementById('mp-dur').textContent=fmtTime(audio.duration||0);
+});
+audio.addEventListener('ended',()=>nextTrack(true));
+audio.addEventListener('play',()=>{ document.getElementById('mp-play-icon').className='fa-solid fa-pause'; });
+audio.addEventListener('pause',()=>{ document.getElementById('mp-play-icon').className='fa-solid fa-play'; });
+
+function seekTo(val) {
+  if(audio.duration) audio.currentTime=(val/100)*audio.duration;
+}
+
+let volExpanded=false;
+function toggleVolExpand(){
+  volExpanded=!volExpanded;
+  const btn=document.getElementById('vol-btn');
+  const sw=document.getElementById('vol-slider-wrap');
+  btn.classList.toggle('expanded',volExpanded);
+  sw.style.width=volExpanded?'100px':'0';
+  sw.style.opacity=volExpanded?'1':'0';
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function setVolume(val) {
+  if(!audio) return;
+  audio.volume = val;
+  if (val > 0) lastVolume = val;
+
+  const volIcon = document.getElementById('vol-icon');
+  if (volIcon) {
+    if (val == 0) volIcon.className = 'fa-solid fa-volume-xmark';
+    else if (val < 0.5) volIcon.className = 'fa-solid fa-volume-low';
+    else volIcon.className = 'fa-solid fa-volume-high';
+  }
+
+  const volSlider = document.getElementById('vol-slider');
+  if (volSlider) {
+    const pct = val * 100;
+    volSlider.style.background = `linear-gradient(to right, #fff ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+  }
+}
+
+function toggleMute() {
+  const volSlider = document.getElementById('vol-slider');
+
+  if (audio.volume > 0) {
+    lastVolume = audio.volume;
+    setVolume(0);
+    if (volSlider) volSlider.value = 0;
+  } else {
+    setVolume(lastVolume);
+    if (volSlider) volSlider.value = lastVolume;
+  }
+}
+
+// Preload track 3 data without playing
+loadTrack(2);
+
+function startSite() {
+  const enterScreen = document.getElementById('enter-screen');
+  const bgVideo = document.getElementById('bg-video');
+
+  enterScreen.classList.add('hidden');
+
+  if (bgVideo) {
+    bgVideo.play().catch(() => {});
+  }
+
+  initAudio();
+
+  // wait until audio is actually ready
+  audio.oncanplay = () => {
+    audio.play().then(() => {
+      document.getElementById('mp-play-icon').className = 'fa-solid fa-pause';
+    }).catch(() => {});
+  };
+
+  setTimeout(typeNext, 400);
+}
+
+
+// This tells the browser: "Find the screen, and when it's clicked, run startSite"
+const screenElement = document.getElementById('enter-screen');
+if (screenElement) {
+    screenElement.onclick = startSite;
+}
+
+//weather
+async function fetchPragueWeather() {
+  const lat = 50.0755;
+  const lon = 14.4378;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const current = data.current;
+
+    // 1. Calculate Temps
+    const tempC = Math.round(current.temperature_2m);
+    const tempF = Math.round((tempC * 9/5) + 32);
+    document.getElementById('w-temp').textContent = `${tempC}°C (${tempF}°F)`;
+
+    // 2. Automatic Icon & Description based on Weather Code
+    const code = current.weather_code;
+    let desc = "Clear";
+    let icon = "https://cdn-icons-png.flaticon.com/512/3222/3222800.png"; // Sun
+
+    if (code >= 1 && code <= 3) {
+      desc = "Partly Cloudy";
+      icon = "https://cdn-icons-png.flaticon.com/512/2698/2698194.png";
+    } else if (code >= 45 && code <= 48) {
+      desc = "Foggy";
+      icon = "https://cdn-icons-png.flaticon.com/512/2675/2675962.png";
+    } else if (code >= 51 && code <= 67) {
+      desc = "Raining";
+      icon = "https://cdn-icons-png.flaticon.com/512/3351/3351008.png";
+    } else if (code >= 71 && code <= 77) {
+      desc = "Snowing";
+      icon = "https://cdn-icons-png.flaticon.com/512/2315/2315309.png";
+    } else if (code >= 80) {
+      desc = "Stormy";
+      icon = "https://cdn-icons-png.flaticon.com/512/1779/1779927.png";
+    }
+
+    document.getElementById('w-desc').textContent = desc;
+    document.getElementById('w-icon').src = icon;
+
+  } catch (err) {
+    document.getElementById('w-temp').textContent = "Offline";
+    console.error("Weather error:", err);
+  }
+}
+
+// Run immediately
+fetchPragueWeather();
+// Update every 15 minutes automatically
+setInterval(fetchPragueWeather, 900000);
+
+async function fetchDiscordStatus() {
+  const userId = "1500818934025158706";
+  const activityEl = document.getElementById('discord-activity');
+  const statusEl = document.getElementById('discord-status');
+
+  try {
+    const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+    const res = await response.json();
+    
+    if (!res.success) {
+      activityEl.textContent = "User not found in Lanyard";
+      return;
+    }
+
+    const data = res.data;
+    console.log("Discord Data:", data); // Check your F12 console to see this!
+
+    // Update Status Icon
+    const status = data.discord_status; 
+    statusEl.src = `https://assets.haunt.gg/status/${status}.png`;
+
+    // Priority Logic
+    const gameActivity = data.activities.find(a => a.type === 0);
+    const customStatus = data.activities.find(a => a.type === 4);
+    
+    if (data.listening_to_spotify) {
+      activityEl.textContent = `Listening to ${data.spotify.song}`;
+    } 
+    else if (gameActivity) {
+      activityEl.textContent = `Playing ${gameActivity.name}`;
+    } 
+    else if (customStatus && customStatus.state) {
+      activityEl.textContent = customStatus.state;
+    } 
+    else if (customStatus && customStatus.emoji) {
+      activityEl.textContent = customStatus.emoji.name;
+    } 
+    else {
+      activityEl.textContent = status === 'offline' ? 'Currently Offline' : 'No current activity';
+    }
+
+// Update Main Profile Picture
+    if (data.discord_user.avatar) {
+      const mainPfp = document.getElementById('main-pfp');
+      if (mainPfp) {
+        const avatarHash = data.discord_user.avatar;
+        // This builds the official Discord CDN link for your pfp
+        mainPfp.src = `https://r2.haunt.gg/avatar/d57f7c8f-ef2e-4ac0-9221-987e1db98724.png`;
+      }
+    }
+
+  } catch (error) {
+    console.error("Lanyard error:", error);
+    activityEl.textContent = "Status Error";
+  }
+}
+
+// Start the fetch
+fetchDiscordStatus();
+setInterval(fetchDiscordStatus, 15000); // Check every 15 seconds
+
+</script>
+</body>
+</html>
