@@ -405,45 +405,124 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    MUSIC PLAYER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#music-player{
-  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  z-index:49;width:min(95%,520px);
+#music-player {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 49;
+  width: min(95%, 780px);
 }
-.mp-inner{
-  display:flex;align-items:center;padding:14px;
-  background:rgba(255,255,255,.05);backdrop-filter:blur(1.2px);
-  border:2px solid rgba(255,255,255,.1);border-radius:35px;
-}
-.mp-cover{
-  width:44px;height:44px;border-radius:35px;overflow:hidden;flex-shrink:0;margin-right:14px;
-}
-.mp-cover img{width:44px;height:44px;object-fit:cover}
-
-.mp-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:0}
-.mp-title-row{display:flex;align-items:center;justify-content:space-between}
-.mp-title{
-  font-size:.875rem;font-weight:500;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:200px;flex:1;
-  transition:opacity .15s;
-}
-.mp-title:hover{opacity:.8}
-.mp-ext{font-size:.75rem;margin-left:4px;color:#ddd}
-
-.mp-progress-row{display:flex;align-items:center;gap:8px;width:100%;margin-top:2px}
-.mp-time{font-size:11px;color:rgba(221,221,221,.75);min-width:35px}
-.mp-time.right{text-align:right}
-.mp-bar{
-  position:relative;flex:1;height:4px;border-radius:9999px;
-  background:rgba(255,255,255,.1);cursor:pointer;
-}
-.mp-fill{height:100%;border-radius:9999px;background:rgba(255,255,255,.7);pointer-events:none}
-.mp-bar input[type=range]{
-  position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;height:100%;
+.mp-inner {
+  display: flex;
+  align-items: stretch;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.05);
+  backdrop-filter: blur(1.2px);
+  border: 2px solid rgba(255,255,255,.1);
+  border-radius: 16px;
+  gap: 12px;
 }
 
-.mp-controls{display:flex;align-items:center;gap:4px;margin-left:8px;flex-shrink:0}
-@media(min-width:640px){.mp-controls{gap:8px;margin-left:16px}}
+/* Left side — cover + info + controls */
+.mp-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  width: 300px;
+}
+.mp-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mp-cover img { width: 56px; height: 56px; object-fit: cover; display: block; }
+
+.mp-details { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.mp-title {
+  font-size: .9rem; font-weight: 500; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: opacity .15s;
+}
+.mp-title:hover { opacity: .8; cursor: pointer; }
+.mp-controls-row { display: flex; align-items: center; gap: 6px; }
+.mp-btn {
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; color: #fff; font-size: .8rem;
+  border-radius: 50%; transition: background .15s;
+}
+.mp-btn:hover { background: rgba(255,255,255,.1); }
+.mp-play-btn {
+  width: 32px; height: 32px; background: #fff !important;
+  color: #000 !important; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: none; font-size: .8rem; transition: opacity .15s;
+}
+.mp-play-btn:hover { opacity: .85; }
+
+.mp-progress-row { display: flex; align-items: center; gap: 6px; }
+.mp-time { font-size: 11px; color: rgba(221,221,221,.75); min-width: 30px; }
+.mp-time.right { text-align: right; }
+.mp-bar {
+  position: relative; flex: 1; height: 4px; border-radius: 9999px;
+  background: rgba(255,255,255,.1); cursor: pointer;
+}
+.mp-fill { height: 100%; border-radius: 9999px; background: rgba(255,255,255,.7); pointer-events: none; }
+.mp-bar input[type=range] {
+  position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; height: 100%;
+}
+
+/* Divider */
+.mp-divider {
+  width: 1px;
+  background: rgba(255,255,255,.1);
+  flex-shrink: 0;
+  margin: 4px 0;
+}
+
+/* Right side — lyrics */
+.mp-lyrics-col {
+  flex: 1;
+  height: 84px;
+  overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(transparent 0%, black 25%, black 75%, transparent 100%);
+  mask-image: linear-gradient(transparent 0%, black 25%, black 75%, transparent 100%);
+}
+#lyrics-scroll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lyric-btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: .8125rem;
+  line-height: 28px;
+  height: 28px;
+  color: rgba(221,221,221,0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0 8px;
+  cursor: pointer !important;
+  transition: all 0.3s ease;
+  opacity: 0.15;
+  filter: blur(2px);
+  flex-shrink: 0;
+}
+.lyric-btn.near  { opacity: 0.35; filter: blur(1.5px); }
+.lyric-btn.close { opacity: 0.65; filter: blur(0.5px); }
+.lyric-btn.active { color: #fff; font-weight: 600; opacity: 1; filter: none; transform: scale(1.03); }
+.lyric-btn:hover  { opacity: 0.85 !important; filter: none !important; }
+
+@media(max-width:700px){ .mp-divider, .mp-lyrics-col { display: none; } .mp-left { width: 100%; } }
 .mp-btn{
   width:32px;height:32px;display:flex;align-items:center;justify-content:center;
   background:none;border:none;color:#fff;font-size:.875rem;
@@ -465,6 +544,72 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
 .reveal.in{opacity:1;transform:none}
 .reveal-slow{opacity:0;transform:translateY(50px);transition:opacity .7s ease,transform .7s ease}
 .reveal-slow.in{opacity:1;transform:none}
+
+#lyrics-panel {
+  position: fixed;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 48;
+  width: min(90%, 520px);
+  height: 140px;
+  overflow: hidden;
+  pointer-events: auto;
+  -webkit-mask-image: linear-gradient(transparent 0%, black 25%, black 75%, transparent 100%);
+  mask-image: linear-gradient(transparent 0%, black 25%, black 75%, transparent 100%);
+}
+
+#lyrics-scroll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lyric-btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: .8125rem;
+  line-height: 28px;
+  height: 28px;
+  color: rgba(221,221,221,0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0 8px;
+  cursor: pointer !important;
+  transition: all 0.3s ease;
+  opacity: 0.15;
+  filter: blur(2px);
+  flex-shrink: 0;
+}
+
+.lyric-btn.near {
+  opacity: 0.4;
+  filter: blur(1px);
+}
+
+.lyric-btn.close {
+  opacity: 0.7;
+  filter: blur(0.5px);
+}
+
+.lyric-btn.active {
+  color: #fff;
+  font-weight: 600;
+  opacity: 1;
+  filter: none;
+  transform: scale(1.04);
+}
+
+.lyric-btn:hover {
+  opacity: 0.85 !important;
+  filter: none !important;
+}
+
+@media(max-width:900px){ #lyrics-panel { display:none; } }
 </style>
 </head>
 <body>
@@ -820,27 +965,38 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
 <!-- ══ MUSIC PLAYER ══ -->
 <div id="music-player">
   <div class="mp-inner">
-    <div class="mp-cover">
-      <img id="mp-cover-img" src="https://r2.haunt.gg/covers/870b9254-cbec-49e2-b7b2-9143187a56a8.gif" alt="cover">
-    </div>
-    <div class="mp-info">
-      <div class="mp-title-row">
-        <span class="mp-title" id="mp-title" title="Click to open" onclick="openExternal()">around the world</span>
-        <i class="fa-solid fa-arrow-up-right-from-square mp-ext"></i>
+
+    <!-- LEFT: cover + info + controls + seek -->
+    <div class="mp-left">
+      <div class="mp-cover">
+        <img id="mp-cover-img" src="https://r2.haunt.gg/covers/870b9254-cbec-49e2-b7b2-9143187a56a8.gif" alt="cover">
       </div>
-      <div class="mp-progress-row">
-        <span class="mp-time" id="mp-cur">0:01</span>
-        <div class="mp-bar" id="mp-bar">
-          <div class="mp-fill" id="mp-fill" style="width:0%"></div>
-          <input type="range" min="0" max="100" value="0" step="0.1" oninput="seekTo(this.value)">
+      <div class="mp-details">
+        <span class="mp-title" id="mp-title" onclick="openExternal()">around the world</span>
+        <div class="mp-controls-row">
+          <button class="mp-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+          <button class="mp-play-btn" id="mp-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="mp-play-icon"></i></button>
+          <button class="mp-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+          <div class="mp-progress-row" style="flex:1;min-width:0;">
+            <span class="mp-time" id="mp-cur">0:00</span>
+            <div class="mp-bar">
+              <div class="mp-fill" id="mp-fill" style="width:0%"></div>
+              <input type="range" min="0" max="100" value="0" step="0.1" oninput="seekTo(this.value)">
+            </div>
+            <span class="mp-time right" id="mp-dur">0:00</span>
+          </div>
         </div>
-        <span class="mp-time right" id="mp-dur">4:12</span>
       </div>
     </div>
-    <div class="mp-controls">
-      <button class="mp-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
-      <button class="mp-btn" id="mp-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="mp-play-icon"></i></button>
-      <button class="mp-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>    </div>
+
+    <!-- DIVIDER -->
+    <div class="mp-divider"></div>
+
+    <!-- RIGHT: lyrics scroll -->
+    <div class="mp-lyrics-col">
+      <div id="lyrics-scroll-inner"></div>
+    </div>
+
   </div>
 </div>
 
@@ -997,42 +1153,107 @@ syncGlobalViews();
 
 // ── MUSIC PLAYER ──
 const tracks = [
-  { title:'Fsociety.',      cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/fsociety.mp3', ext:null },
-  { title:'Bring me to Life', cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/aaa.mp3', ext:null },
-  { title:'Thé à la Menthe', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://assetsluckymucky.netlify.app/la_caution.mp3', ext:null },
-  { title:'Bound 2', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://assetsluckymucky.netlify.app/bound2.mp3', ext:null },
-  { title:'The Lamp is Low', cover:'https://assetsluckymucky.netlify.app/cross.gif', audio:'https://assetsluckymucky.netlify.app/lamp.mp3', ext:null },
+  { title:'The Lamp is Low',            lyrics: null,                        cover:'https://assetsluckymucky.netlify.app/cross.gif',                            audio:'https://assetsluckymucky.netlify.app/songs/mp3s/lamp.mp3', ext:null },
+  { title:'Bring me to Life',           lyrics: null,                        cover:'https://assetsluckymucky.netlify.app/cross.gif',                            audio:'https://assetsluckymucky.netlify.app/songs/mp3s/aaa.mp3', ext:null },
+  { title:'Thé à la Menthe',            lyrics: 'lyrics/the_a_la_menthe.txt',cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf',          audio:'https://assetsluckymucky.netlify.app/songs/mp3s/la_caution.mp3', ext:null },
+  { title:'Bound 2',                    lyrics: 'lyrics/bound2.txt',         cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg',    audio:'https://assetsluckymucky.netlify.app/songs/mp3s/bound2.mp3', ext:null },
+  { title:'I Was Made For Lovin\' You', lyrics: 'lyrics/lovin_you.txt',      cover:'https://assetsluckymucky.netlify.app/songs/covers/lovin_you.jpg',           audio:'https://assetsluckymucky.netlify.app/songs/mp3s/lovin_you.mp3', ext:null },
+  { title:'Ms. jackson',                lyrics: 'lyrics/msjackson.txt',      cover:'https://assetsluckymucky.netlify.app/songs/covers/msjackson.jpg',           audio:'https://assetsluckymucky.netlify.app/songs/mp3s/msjackson.mp3', ext:null }
 
 ];
+
+let parsedLyrics = [];
+let currentLyricIdx = -1;
+
+function parseLRC(lrcText) {
+  const lines = lrcText.split('\n');
+  const result = [];
+  const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/g;
+  for (const line of lines) {
+    const timestamps = [];
+    const cleanLine = line.replace(timeRegex, (full, m, s, ms) => {
+      timestamps.push(parseInt(m)*60 + parseInt(s) + parseInt(ms)/(ms.length===3?1000:100));
+      return '';
+    }).trim();
+    if (cleanLine && timestamps.length)
+      for (const t of timestamps) result.push({ time: t, text: cleanLine });
+  }
+  return result.sort((a, b) => a.time - b.time);
+}
+
+function buildLyricButtons() {
+  const inner = document.getElementById('lyrics-scroll-inner');
+  if (!inner) return;
+  inner.innerHTML = '';
+  parsedLyrics.forEach((line, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'lyric-btn';
+    btn.textContent = line.text;
+    btn.onclick = () => { audio.currentTime = line.time; };
+    inner.appendChild(btn);
+  });
+}
+
+async function fetchLyrics(path) {
+  parsedLyrics = []; currentLyricIdx = -1;
+  const inner = document.getElementById('lyrics-scroll-inner');
+  if (inner) inner.innerHTML = '';
+  try {
+    const res = await fetch(path);
+    const text = await res.text();
+    parsedLyrics = parseLRC(text);
+    buildLyricButtons();
+  } catch(e) { console.error('Lyrics fetch failed:', e); }
+}
+
+function updateLyrics(currentTime) {
+  if (!parsedLyrics.length) return;
+  let idx = -1;
+  for (let i = 0; i < parsedLyrics.length; i++) {
+    if (parsedLyrics[i].time <= currentTime) idx = i;
+    else break;
+  }
+  if (idx === currentLyricIdx) return;
+  currentLyricIdx = idx;
+
+  const inner = document.getElementById('lyrics-scroll-inner');
+  const panel = inner.closest('.mp-lyrics-col');
+  if (!inner || !panel) return;
+
+  const btns = inner.querySelectorAll('.lyric-btn');
+  btns.forEach((btn, i) => {
+    btn.classList.remove('active', 'close', 'near');
+    const dist = Math.abs(i - idx);
+    if (i === idx) btn.classList.add('active');
+    else if (dist === 1) btn.classList.add('close');
+    else if (dist === 2) btn.classList.add('near');
+  });
+
+  // Scroll so active line sits at 30% height (center-ish of visible area)
+  const lineH = 28;
+  const panelH = panel.offsetHeight;
+  const targetOffset = idx * lineH - panelH * 0.35;
+  inner.style.transform = `translateY(${-Math.max(0, targetOffset)}px)`;
+}
 
 function loadTrack(idx, play=false) {
   curTrack = idx;
   const t = tracks[idx];
-
-  audio.pause(); // IMPORTANT: stop current safely
-
+  audio.pause();
   const cover = document.getElementById('mp-cover-img');
-cover.src = t.cover;
-
-if (t.cover.includes("cross.gif")) {
-  cover.style.transform = "scale(1.5)";
-} else {
-  cover.style.transform = "scale(1)";
-}
-cover.style.transform = (t.title === 'Bound 2')
-  ? 'translateX(-2px)'
-  : 'translateX(0px)';
+  cover.src = t.cover;
+  cover.style.transform = t.cover.includes("cross.gif") ? "scale(1.5)" : (t.title === 'Bound 2') ? 'translateX(-2px)' : 'translateX(0px)';
   document.getElementById('mp-title').textContent = t.title;
-
   audio.src = t.audio;
-
-  if (play) {
-    audio.play().catch(() => {});
+  if (play) audio.play().catch(() => {});
+  if (t.lyrics) {
+    fetchLyrics(t.lyrics);
+ } else {
+    parsedLyrics = []; currentLyricIdx = -1;
+    const inner = document.getElementById('lyrics-scroll-inner');
+    if (inner) inner.innerHTML = '';
   }
 }
-
-  document.getElementById('mp-play-icon').className = 'fa-solid fa-play';
-
 
 function initAudio() {
   setVolume(0.5);
@@ -1057,16 +1278,14 @@ function fmtTime(s) {
 
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
-
   const pct = (audio.currentTime / audio.duration) * 100;
-
   document.getElementById('mp-fill').style.width = pct + '%';
-
   const slider = document.querySelector('.mp-bar input');
   if (slider) slider.value = pct;
-
   document.getElementById('mp-cur').textContent = fmtTime(audio.currentTime);
+  updateLyrics(audio.currentTime);
 });
+
 audio.addEventListener('loadedmetadata',()=>{
   document.getElementById('mp-dur').textContent=fmtTime(audio.duration||0);
 });
