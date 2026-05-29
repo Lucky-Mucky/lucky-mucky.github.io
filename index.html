@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <title>luckymucky</title>
 <meta name="theme-color" content="#f27db3">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -433,7 +433,20 @@ img,svg,video,canvas,figure,picture{-webkit-user-drag:none;user-drag:none}
   min-width: 0;
 }
 
+.no-hover:hover {
+  width: 52px !important;
+}
 
+@media (max-width: 700px) {
+  .mp-progress-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .mp-time {
+    font-size: 10px;
+  }
+}
 
 </style>
 </head>
@@ -947,12 +960,12 @@ syncGlobalViews();
 ───────────────────────────── */
 const tracks = [
   { title:'The Lamp is Low', lyrics:null, cover:'https://i.scdn.co/image/ab67616d0000b273bb61ea59e6648c11454b5bfe', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/lamp.mp3' },
-  { title:'Bring me to Life', lyrics:'lyrics/bring_me_to_life.txt', cover:'https://i.scdn.co/image/ab67616d0000b27325f49ab23f0ec6332efef432', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/aaa.mp3' },
-  { title:'Thé à la Menthe', lyrics:'lyrics/the_a_la_menthe.txt', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/la_caution.mp3' },
-  { title:'Bound 2', lyrics:'lyrics/bound2.txt', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/bound2.mp3' },
-  { title:"I Was Made For Lovin' You", lyrics:'lyrics/lovin_you.txt', cover:'https://assetsluckymucky.netlify.app/songs/covers/lovin_you.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/lovin_you.mp3' },
-  { title:'Ms. Jackson', lyrics:'lyrics/msjackson.txt', cover:'https://assetsluckymucky.netlify.app/songs/covers/msjackson.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/msjackson.mp3' },
-  { title:'Hey Ya!', lyrics:'lyrics/hey_ya.txt', cover:'https://i.scdn.co/image/ab67616d0000b2736e88eb6508fd94cd1b745ce2', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/hey_ya.mp3' }
+  { title:'Bring me to Life', lyrics:'https://assetsluckymucky.netlify.app/lyrics/bring_me_to_life.txt', cover:'https://i.scdn.co/image/ab67616d0000b27325f49ab23f0ec6332efef432', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/aaa.mp3' },
+  { title:'Thé à la Menthe', lyrics:'https://assetsluckymucky.netlify.app/lyrics/the_a_la_menthe.txt', cover:'https://i.scdn.co/image/ab67616d0000b273d3ddd4361d835095a06a70bf', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/la_caution.mp3' },
+  { title:'Bound 2', lyrics:'https://assetsluckymucky.netlify.app/lyrics/bound2.txt', cover:'https://m.media-amazon.com/images/I/41-burMoCzL._UXNaN_FMjpg_QL85_.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/bound2.mp3' },
+  { title:"I Was Made For Lovin' You", lyrics:'https://assetsluckymucky.netlify.app/lyrics/lovin_you.txt', cover:'https://assetsluckymucky.netlify.app/songs/covers/lovin_you.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/lovin_you.mp3' },
+  { title:'Ms. Jackson', lyrics:'https://assetsluckymucky.netlify.app/lyrics/msjackson.txt', cover:'https://assetsluckymucky.netlify.app/songs/covers/msjackson.jpg', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/msjackson.mp3' },
+  { title:'Hey Ya!', lyrics:'https://assetsluckymucky.netlify.app/lyrics/hey_ya.txt', cover:'https://i.scdn.co/image/ab67616d0000b2736e88eb6508fd94cd1b745ce2', audio:'https://assetsluckymucky.netlify.app/songs/mp3s/hey_ya.mp3' }
 ];
 
 /* ─────────────────────────────
@@ -1048,7 +1061,12 @@ function loadTrack(idx, play=false) {
   DOM.mpTitle.textContent = t.title;
   audio.src = t.audio;
 
-  if (play) audio.play().catch(()=>{});
+audio.muted = true;
+audio.play().then(() => {
+  setTimeout(() => {
+    audio.muted = false;
+  }, 300);
+}).catch(()=>{});
 
   if (t.lyrics) fetchLyrics(t.lyrics);
   else DOM.lyricsInner.innerHTML =
@@ -1297,6 +1315,23 @@ async function fetchDiscordStatus(){
 
 fetchDiscordStatus();
 setInterval(fetchDiscordStatus,15000);
+
+// Scroll \\
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+window.addEventListener('load', () => {
+  const offset = window.innerWidth < 600 ? 60 : 120;
+  window.scrollTo(0, offset);
+});
+
+const isTouch = window.matchMedia("(hover: none)").matches;
+
+if (isTouch) {
+  document.getElementById('vol-btn').classList.add('no-hover');
+}
 
 </script>
 </body>
